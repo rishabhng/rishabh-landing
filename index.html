@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rishabh Narang - 0xrishng</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chicago&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Chicago';
+            src: url('data:font/woff2;base64,') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        
+        body {
+            font-family: 'Courier', 'Monaco', monospace;
+            background: #008080;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,0,0,0.1) 2px,
+                    rgba(0,0,0,0.1) 4px
+                );
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAASCAYAAABrXO8xAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAAWdEVYdENyZWF0aW9uIFRpbWUAMDcvMTMvMTTPsvbgAAAAd0lEQVQ4jb2TMQrEMAhFfxIXC4uFxSZNCpuUm0zqtN4iV9imTZnCgJkkmeRA+OaDgvKVj0D8A0SEhBhjDr+IqiqIKMYY8K2qKogIAGDOGSKCfdsAAEp5vZRS2vVJay3WWgMAaK3FWkuttaa1lmutrbW21tpaO+fcB8YINwtM3c/6AAAAAElFTkSuQmCC'), auto;
+        }
+        
+        .desktop-icon {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .desktop-icon img {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 4px;
+            filter: drop-shadow(1px 1px 0px rgba(0,0,0,0.5));
+        }
+        
+        .desktop-icon span {
+            display: block;
+            color: white;
+            font-size: 11px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.3);
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+        
+        .window {
+            background: #c0c0c0;
+            border: 2px solid #000;
+            box-shadow: 
+                inset -1px -1px 0 #000,
+                inset 1px 1px 0 #dfdfdf,
+                inset -2px -2px 0 #808080,
+                inset 2px 2px 0 #fff;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .title-bar {
+            background: linear-gradient(to right, #000080, #1084d0);
+            color: white;
+            padding: 2px 4px;
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            user-select: none;
+            cursor: move;
+        }
+        
+        .title-bar-controls {
+            display: flex;
+            gap: 4px;
+            margin-right: 8px;
+        }
+        
+        .title-bar-button {
+            width: 13px;
+            height: 11px;
+            border: 1px solid #000;
+            background: #c0c0c0;
+            box-shadow: inset -1px -1px 0 #000, inset 1px 1px 0 #fff;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .title-bar-button.close {
+            background: #c0c0c0;
+        }
+        
+        .title-bar-button.close::before,
+        .title-bar-button.close::after {
+            content: '';
+            position: absolute;
+            width: 7px;
+            height: 1px;
+            background: #000;
+            top: 50%;
+            left: 50%;
+        }
+        
+        .title-bar-button.close::before {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+        
+        .title-bar-button.close::after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+        
+        .title-bar-text {
+            flex: 1;
+            text-align: center;
+            font-family: 'Chicago', 'Arial', sans-serif;
+            letter-spacing: 0.5px;
+        }
+        
+        .menu-bar {
+            background: #c0c0c0;
+            border-bottom: 1px solid #000;
+            padding: 2px 4px;
+            display: flex;
+            gap: 12px;
+            font-size: 11px;
+            user-select: none;
+        }
+        
+        .menu-item {
+            padding: 2px 8px;
+            cursor: pointer;
+        }
+        
+        .menu-item:hover {
+            background: #000080;
+            color: white;
+        }
+        
+        .toolbar {
+            background: #c0c0c0;
+            border-bottom: 1px solid #000;
+            padding: 4px;
+            display: flex;
+            gap: 2px;
+        }
+        
+        .toolbar-button {
+            width: 30px;
+            height: 24px;
+            border: 1px solid #000;
+            background: #c0c0c0;
+            box-shadow: inset -1px -1px 0 #000, inset 1px 1px 0 #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .toolbar-button:active {
+            box-shadow: inset 1px 1px 0 #000, inset -1px -1px 0 #fff;
+        }
+        
+        .toolbar-separator {
+            width: 1px;
+            background: #808080;
+            margin: 0 4px;
+        }
+        
+        .content {
+            background: white;
+            padding: 20px;
+            min-height: 400px;
+            font-family: 'Times', 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #000;
+            border: 1px solid #000;
+            margin: 8px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            font-family: 'Chicago', 'Arial Black', sans-serif;
+            text-align: center;
+            text-decoration: underline;
+        }
+        
+        h2 {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            font-family: 'Chicago', 'Arial Black', sans-serif;
+            text-decoration: underline;
+        }
+        
+        .bio-section {
+            margin: 20px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border: 1px solid #808080;
+        }
+        
+        .links {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .link-button {
+            padding: 8px 16px;
+            border: 2px solid #000;
+            background: #c0c0c0;
+            box-shadow: 
+                inset -1px -1px 0 #000,
+                inset 1px 1px 0 #dfdfdf,
+                inset -2px -2px 0 #808080,
+                inset 2px 2px 0 #fff;
+            cursor: pointer;
+            text-decoration: none;
+            color: #000;
+            font-family: 'Chicago', 'Arial', sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .link-button:hover {
+            background: #d0d0d0;
+        }
+        
+        .link-button:active {
+            box-shadow: 
+                inset 1px 1px 0 #000,
+                inset -1px -1px 0 #dfdfdf,
+                inset 2px 2px 0 #808080,
+                inset -2px -2px 0 #fff;
+        }
+        
+        .status-bar {
+            background: #c0c0c0;
+            border-top: 1px solid #fff;
+            padding: 2px 4px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: inset 0 1px 0 #808080;
+        }
+        
+        .status-section {
+            border: 1px solid;
+            border-color: #808080 #fff #fff #808080;
+            padding: 2px 4px;
+            background: #c0c0c0;
+        }
+        
+        .ascii-art {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            line-height: 1.2;
+            white-space: pre;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .highlight {
+            background: #ffff00;
+            padding: 1px 2px;
+            border: 1px dotted #000;
+        }
+        
+        @media (max-width: 600px) {
+            .window {
+                margin: 10px;
+            }
+            .content {
+                padding: 10px;
+                font-size: 12px;
+            }
+            .desktop-icon {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop-icon">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23c0c0c0'/%3E%3Crect x='4' y='8' width='24' height='18' fill='white'/%3E%3Crect x='4' y='8' width='24' height='2' fill='%23000080'/%3E%3C/svg%3E" alt="Document">
+        <span>About.doc</span>
+    </div>
+    
+    <div class="window">
+        <div class="title-bar">
+            <div class="title-bar-controls">
+                <div class="title-bar-button close"></div>
+            </div>
+            <div class="title-bar-text">Rishabh Narang - 0xrishng.doc</div>
+        </div>
+        
+        <div class="menu-bar">
+            <span class="menu-item">File</span>
+            <span class="menu-item">Edit</span>
+            <span class="menu-item">View</span>
+            <span class="menu-item">Insert</span>
+            <span class="menu-item">Format</span>
+            <span class="menu-item">Tools</span>
+            <span class="menu-item">Table</span>
+            <span class="menu-item">Window</span>
+            <span class="menu-item">Help</span>
+        </div>
+        
+        <div class="toolbar">
+            <div class="toolbar-button">N</div>
+            <div class="toolbar-button">O</div>
+            <div class="toolbar-button">S</div>
+            <div class="toolbar-separator"></div>
+            <div class="toolbar-button">✂</div>
+            <div class="toolbar-button">📋</div>
+            <div class="toolbar-button">📄</div>
+            <div class="toolbar-separator"></div>
+            <div class="toolbar-button">↶</div>
+            <div class="toolbar-button">↷</div>
+            <div class="toolbar-separator"></div>
+            <div class="toolbar-button">B</div>
+            <div class="toolbar-button">I</div>
+            <div class="toolbar-button">U</div>
+        </div>
+        
+        <div class="content">
+            <h1>RISHABH NARANG</h1>
+            
+            <div class="ascii-art">
+╔═══════════════════════════════════════╗
+║  Building the Future of Crypto & AI  ║
+╚═══════════════════════════════════════╝
+            </div>
+            
+            <div class="bio-section">
+                <p><strong>Handle:</strong> <span class="highlight">@0xrishng</span></p>
+                <p><strong>Location:</strong> New Delhi, India</p>
+                <p><strong>Since:</strong> Mining Bitcoin since 2012</p>
+            </div>
+            
+            <h2>CURRENT VENTURES</h2>
+            
+            <p><strong>→ CEO & Co-Founder, Sharpe AI</strong><br>
+            Building an AI-powered crypto super app designed to provide advanced crypto intelligence and execution. Sharpe eliminates the need to juggle dozens of different tools for market insights and trade execution.</p>
+            
+            <p><strong>→ Spokesperson, Hive Intelligence</strong><br>
+            Leading AI-driven blockchain data infrastructure that provides real-time, multi-chain data through a unified API. Part of NVIDIA Inception program, powering next-generation crypto AI agents.</p>
+            
+            <h2>THE JOURNEY</h2>
+            
+            <p>• Started mining Bitcoin in 2012 out of curiosity<br>
+            • Initially dismissed Ethereum, then became obsessed with smart contracts<br>
+            • Built first crypto venture in 2016<br>
+            • Backed 30+ companies in crypto/DeFi space<br>
+            • Acquired Hive Intelligence (Dec 2024) and Brownian<br>
+            • Joined NVIDIA Inception (2025)</p>
+            
+            <h2>VISION</h2>
+            
+            <p>Making Sharpe <span class="highlight">the default interface for interacting with crypto and DeFi</span> for both retail traders and major institutions. Expanding into decentralized marketplaces, on-chain incentive platforms, and AI-powered financial services.</p>
+            
+            <h2>ACHIEVEMENTS</h2>
+            
+            <p>✓ Sharpe Ratio: 3.96 (Live Portfolio)<br>
+            ✓ 0% Daily MTM Drawdown<br>
+            ✓ Profit Factor: 21.3<br>
+            ✓ Building DeFi Infrastructure<br>
+            ✓ HFT Trading Operations (State Mount)</p>
+            
+            <div class="ascii-art">
+┌─────────────────────┐
+│ "Decentralization   │
+│  isn't just tech,   │
+│  it's philosophy"   │
+└─────────────────────┘
+            </div>
+            
+            <div class="links">
+                <a href="https://twitter.com/0xrishng" class="link-button" target="_blank">Twitter</a>
+                <a href="https://sharpe.ai" class="link-button" target="_blank">Sharpe AI</a>
+                <a href="https://hiveintelligence.ai" class="link-button" target="_blank">Hive Intelligence</a>
+                <a href="https://www.linkedin.com/in/rishabhnarang" class="link-button" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+        
+        <div class="status-bar">
+            <div class="status-section">Page 1</div>
+            <div class="status-section">Sec 1</div>
+            <div class="status-section">1/1</div>
+            <div class="status-section">At 1"</div>
+            <div class="status-section">Ln 1 Col 1</div>
+        </div>
+    </div>
+    
+    <script>
+        // Add draggable window functionality
+        const titleBar = document.querySelector('.title-bar');
+        const window = document.querySelector('.window');
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+        
+        titleBar.addEventListener('mousedown', dragStart);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', dragEnd);
+        
+        function dragStart(e) {
+            if (e.target.classList.contains('title-bar-button')) return;
+            
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+            
+            if (e.target === titleBar || e.target.classList.contains('title-bar-text')) {
+                isDragging = true;
+            }
+        }
+        
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                
+                xOffset = currentX;
+                yOffset = currentY;
+                
+                window.style.transform = `translate(${currentX}px, ${currentY}px)`;
+            }
+        }
+        
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        }
+        
+        // Close button functionality
+        document.querySelector('.close').addEventListener('click', () => {
+            alert('This window cannot be closed. Welcome to 1995!');
+        });
+        
+        // Menu items
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                alert(`${item.textContent} menu - Feature coming soon to Netscape Navigator 2.0!`);
+            });
+        });
+        
+        // Toolbar buttons
+        document.querySelectorAll('.toolbar-button').forEach(button => {
+            button.addEventListener('click', () => {
+                button.style.boxShadow = 'inset 1px 1px 0 #000, inset -1px -1px 0 #fff';
+                setTimeout(() => {
+                    button.style.boxShadow = 'inset -1px -1px 0 #000, inset 1px 1px 0 #fff';
+                }, 100);
+            });
+        });
+        
+        // Desktop icon double-click
+        document.querySelector('.desktop-icon').addEventListener('dblclick', () => {
+            document.querySelector('.window').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // Add retro loading effect
+        window.addEventListener('load', () => {
+            const content = document.querySelector('.content');
+            content.style.opacity = '0';
+            setTimeout(() => {
+                content.style.transition = 'opacity 0.5s';
+                content.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

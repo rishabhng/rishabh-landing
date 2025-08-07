@@ -1,0 +1,19 @@
+{
+  "name": "rishabh-narang-landing",
+  "version": "1.0.0",
+  "description": "Retro 90s Macintosh-style landing page for Rishabh Narang",
+  "scripts": {
+    "dev": "python3 -m http.server 3000",
+    "build": "echo 'No build step required for static HTML'"
+  },
+  "keywords": [
+    "rishabh-narang",
+    "0xrishng",
+    "sharpe-ai",
+    "hive-intelligence",
+    "crypto",
+    "blockchain"
+  ],
+  "author": "Rishabh Narang",
+  "license": "MIT"
+}
